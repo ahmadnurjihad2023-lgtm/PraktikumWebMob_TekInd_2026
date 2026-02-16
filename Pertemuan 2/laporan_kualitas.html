@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="laporan_kualitas.css">
+    <title>Laporan Kualitas_Ahmad Nurjihad_23051430004</title>
+</head>
+
+<body>
+<div class="container">
+    <header>
+
+     <h1>Laporan Kualitas Produk</h1>
+        <p>Halaman ini berisi formulir Laporan Inspeksi Kualitas</p>
+        <h5>Dibuat oleh : Ahmad Nurjihad (23051430004)</h5>
+    </header>
+    <section>
+        <form action="">
+            <!-- field id produk -->
+            <label for="id_produk">ID Produk :</label>
+            <input type="text" id="id_produk" name="Id Produk" placeholder="Masukan ID Produk" required><br><br>
+
+            <!-- field Nama Inspektur -->
+            <label for="nama_inspektur">Nama Inspektur :</label>
+            <input type="text" id="nama_inspektur" name="Nama Inspektur" placeholder="Masukan Nama Inspektur"
+                required><br><br>
+
+            <!-- field jenis cacat -->
+            <label>Jenis Cacat :</label>
+            <!-- Radio opsi geometri -->
+            <input type="radio" id="permukaan" name="status" value="geometri">
+            <label for=geometri>Geometri</label><br>
+            <!-- radio opsi permukaan -->
+            <input type="radio" id="permukaan" name="status" value="fungsional">
+            <label for="fungsional">Fungsional</label><br><br>
+            <!-- radio opsi fungsional-->
+            <input type="radio" id="permukaan" name="status" value="permukaan">
+            <label for="permukaan">Permukaan</label><br><br>
+
+            <!-- field jumlah cacat -->
+            <label for="jumlah_cacat">Jumlah Cacat :</label>
+            <input type="number" id="jumlah_cacat" name="Jumlah Cacat" placeholder="Masukan Jumlah Cacat"
+                required><br><br>
+
+            <!-- field foto produk -->
+            <label for="foto_produk">Upload Foto Produk :</label>
+            <input type="file" id="foto_produk" name="Foto Produk" placeholder="Pilih Foto Produk Anda"><br><br>
+            <button type="submit">Simpan Laporan</button><br><br>
+            <button type="reset">Reset Form</button>
+
+        </form>
+
+    </section>
+</body>
+
+</html>
