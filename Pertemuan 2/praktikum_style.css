@@ -80,16 +80,22 @@ button {
   width: 100%;
   font-size: 16px;
 }
-button:hover {
-  background-color: #219150; /* Hijau lebih gelap saat hover */
+.status-down:hover {
+    background-color: #871205; /* Merah */
 }
 
-status-ok {
-    color: #27ae60; /* Hijau */
-    font-weight: bold;
+
+.status-up:hover {
+    background-color: #097034; /* Hijau lebih gelap saat hover */
 }
 
-status-down {
-    color: #e74c3c; /* Merah */
-    font-weight: bold;
+.status-up {
+  color: #27ae60; /* Hijau */
+  font-weight: bold;
+}
+
+.status-down {
+  background-color: #e74c3c; /* Merah */
+  font-weight: bold;
+ 
 }
