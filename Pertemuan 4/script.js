@@ -20,8 +20,6 @@ console.log("Total saat ini: " + totalProduksi);
 let kekurangan = targetHarian - totalProduksi;
 console.log("Kekurangan target: " + kekurangan);
 
-// Langkah 2: Control Flow (pengambilan keputusan) //
-
 // Simulasi data pembacaan sensor (jam operasional)
 let jamOperasional = 1250; // dalam jam
 let batasMaksimal = 1200; // batas sebelum maintenance wajib
@@ -61,11 +59,3 @@ if (availability >= 90) {
     console.log("Kategori: BURUK (Perlu investigasi penyebab breakdown)");
 }
 
-// Langkah 4: Interaksi DOM Sederhana (Alert &Prompt)
-let namaOperator = prompt("Masukkan Nama Operator:"); 
-let shiftKerja = prompt("Masukkan Shift (Pagi/Siang/Malam):"); 
-if (shiftKerja === "Malam") { 
-    alert("Halo " + namaOperator + ", Shift malam memiliki tambahan uang makan sebesar Rp 20.000."); 
-} else { 
-    alert("Halo " + namaOperator + ", Selamat bekerja. Tetap semangat!"); 
-}
