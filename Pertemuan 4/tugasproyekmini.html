@@ -1,13 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
-    <script src="tugasptoyekmini.js"></script>
+
 </head>
+
 <body>
-    <h1>Tugas Proyek Mini</h1>
-    <h2>Ahmad Nurjihad 23051430004</h2>
+    <h1>Kalkulator Biaya Produksi</h1>
+    <section class="mb-5">
+        <article class="card shadow-sm">
+            <div class="card-body">
+
+                <h2 class="h4 fw-bold text-center mb-4">Input Data Produksi</h2>
+
+                <form id="formProduksi">
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="bahanBaku" class="form-label">Biaya Bahan Baku (Rp)</label>
+                            <input type="number" class="form-control format-rupiah" id="bahanBaku"
+                                placeholder="Masukkan biaya bahan baku" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="tenagaKerja" class="form-label">Biaya Tenaga Kerja (Rp)</label>
+                            <input type="number" class="form-control format-rupiah" id="tenagaKerja"
+                                placeholder="Masukkan biaya tenaga kerja" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="overhead" class="form-label">Biaya Overhead (Rp)</label>
+                            <input type="number" class="form-control format-rupiah" id="overhead"
+                                placeholder="Masukkan biaya overhead" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="jumlahProduksi" class="form-label">Jumlah Produksi (Unit)</label>
+                            <input type="number" class="form-control" id="jumlahProduksi"
+                                placeholder="Masukkan jumlah produksi" required>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary w-100">
+                            Hitung Biaya
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </article>
+    </section>
+
+    <!-- HASIL -->
+    <section>
+        <article class="card shadow-sm">
+            <div class="card-body text-center">
+                <h2 class="h4 fw-bold mb-3">Hasil Perhitungan</h2>
+                <p class="text-muted">
+                    Hasil akan muncul di sini dan juga di console browser.
+                </p>
+                <div id="hasilOutput" class="fw-semibold fs-5"></div>
+            </div>
+        </article>
+    </section>
+    <script src="tugasptoyekmini.js"></script>
 </body>
+
 </html>
