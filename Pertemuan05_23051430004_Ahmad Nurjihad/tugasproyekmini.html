@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Antrian Mesin</title>
+    <link rel="stylesheet" href="tugasproyekmini.css">
+</head>
+
+<body>
+    <h1>Proyek Mini - Antrian Mesin</h1>
+    <p>Ahmad Nurjihad_23051430004</p>
+    <hr>
+
+    <!-- Bagian input antrian mesin -->
+    <form action>
+        <h2>Input Antrian Mesin</h2>
+        <label>ID Job :</label>
+        <input type="text" id="idJob"><br><br>
+
+        <label>Nama Proses :</label>
+        <input type="text" id="namaProses"><br><br>
+
+        <label>Durasi (menit) :</label>
+        <input type="number" id="durasi"><br><br>
+
+        <button onclick="tambahJob()">Tambah Job</button>
+        <button onclick="jalankanProses()">Proses Antrian</button>
+    </form>
+
+    <h3>Output:</h3>
+    <div id="output"></div>
+
+    <!-- Menghubungkan ke JavaScript -->
+    <script src="tugasproyekmini.js"></script>
+
+</body>
+
+</html>
