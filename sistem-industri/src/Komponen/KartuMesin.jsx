@@ -1,27 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-// Latihan 2: Tambahkan '= 0' pada variabel produksi
-function KartuMesin({ nama, status, produksi = 0 }) {
-  
+function KartuMesin({ nama, status, produksi }) {
+
+  // Status bisa diubah secara lokal oleh user
+  const [statusLokal, setStatusLokal] = useState(status);
+
+  // Warna badge berdasarkan status
   let badgeColor = 'bg-secondary';
-  if (status === 'Running') badgeColor = 'bg-success';
-  if (status === 'Stop') badgeColor = 'bg-danger';
-  if (status === 'Maintenance') badgeColor = 'bg-warning';
+  if (statusLokal === 'Running') badgeColor = 'bg-success';
+  if (statusLokal === 'Stop') badgeColor = 'bg-danger';
+  if (statusLokal === 'Maintenance') badgeColor = 'bg-warning';
 
   return (
-    <div className="card shadow-sm mb-4">
-      <div className="card-header bg-dark text-white">
-        <h5 className="card-title mb-0">{nama}</h5>
-      </div>
+    <div className="card shadow-sm p-3 mb-3">
       <div className="card-body">
-        <p className="card-text">
-          <strong>Status:</strong> 
-          <span className={`badge ms-2 ${badgeColor}`}>{status}</span>
-        </p>
-        <p className="card-text">
-          <strong>Produksi Saat Ini:</strong> {produksi} Unit
-        </p>
-        <button className="btn btn-primary btn-sm">Kontrol Mesin</button>
+        <h5 className="card-title">{nama}</h5>
+        <span className={`badge ${badgeColor}`}>{statusLokal}</span>
+        <hr />
+        <p>Produksi Saat Ini: <strong>{produksi}</strong> Unit</p>
+
+        {/* Dropdown untuk ganti status */}
+        <div className="mt-2">
+          <select
+            className="form-select form-select-sm"
+            value={statusLokal}
+            onChange={(e) => setStatusLokal(e.target.value)}
+          >
+            <option value="Running">Running</option>
+            <option value="Stop">Stop</option>
+            <option value="Maintenance">Maintenance</option>
+          </select>
+        </div>
+
       </div>
     </div>
   );
