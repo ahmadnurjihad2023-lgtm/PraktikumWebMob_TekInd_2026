@@ -1,80 +1,61 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GrafikProduksi from '../Komponen/GrafikProduksi';
+import GrafikKualitas from '../Komponen/GrafikKualitas'; // Import komponen baru
 
 function Dashboard() {
     const [mesin, setMesin] = useState("Mesin A");
     const [dataProduksi, setDataProduksi] = useState([]);
-    const [loading, setLoading] = useState(true);
 
-    // FUNGSI SIMULASI FETCH DATA (Integrasi Data Realistik)
-    // Fungsi ini menghasilkan angka acak seolah-olah mengambil dari API
-    const fetchDataProduksi = () => {
-        setLoading(true);
+    const targetHarian = 1000; // Contoh target produksi
 
-        // Simulasi delay jaringan selama 500ms
-        setTimeout(() => {
-            const dataBaru = Array.from({ length: 6 }, () => Math.floor(Math.random() * 100) + 120);
-            setDataProduksi(dataBaru);
-            setLoading(false);
-        }, 500);
+    const fetchData = () => {
+        const dataBaru = Array.from({ length: 6 }, () => Math.floor(Math.random() * 100) + 120);
+        setDataProduksi(dataBaru);
     };
 
-    // useEffect akan menjalankan fetch setiap kali pilihan 'mesin' berubah
-    useEffect(() => {
-        fetchDataProduksi();
-    }, [mesin]);
+    useEffect(() => { fetchData(); }, [mesin]);
 
-    // Menghitung total untuk kartu KPI
     const totalProduksi = dataProduksi.reduce((a, b) => a + b, 0);
 
-    return (
-        <div className="container-fluid mt-4" style={{ backgroundColor: '#f4f7f6', minHeight: '100vh' }}>
-            <div className="row mb-4 align-items-center">
-                <div className="col-md-6">
-                    <h3 className="fw-bold text-primary">INDUSTRY 4.0 DASHBOARD</h3>
-                </div>
+    // LOGIKA LATIHAN 2: Conditional Styling
+    // Jika total produksi di bawah target, warna kartu menjadi kuning (warning)
+    const statusWarna = totalProduksi < targetHarian ? "bg-warning text-dark" : "bg-success text-white";
 
-                {/* FITUR FILTER */}
+    return (
+        <div className="container-fluid mt-4">
+            <div className="row mb-4">
+                <div className="col-md-6"><h3>Latihan 2: Advanced Dashboard</h3></div>
                 <div className="col-md-6 text-end">
-                    <span className="me-2 fw-bold">Filter Sumber Data:</span>
-                    <select
-                        className="form-select d-inline-block w-auto shadow-sm"
-                        value={mesin}
-                        onChange={(e) => setMesin(e.target.value)}
-                    >
-                        <option value="Mesin A">Lini Produksi A</option>
-                        <option value="Mesin B">Lini Produksi B</option>
-                        <option value="Mesin C">Lini Produksi C</option>
+                    <select className="form-select d-inline-block w-auto" onChange={(e) => setMesin(e.target.value)}>
+                        <option value="Mesin A">Mesin A</option>
+                        <option value="Mesin B">Mesin B</option>
                     </select>
-                    <button className="btn btn-primary ms-2 shadow-sm" onClick={fetchDataProduksi}>
-                        🔄 Refresh
-                    </button>
                 </div>
             </div>
 
             <div className="row">
-                {/* KARTU KPI */}
+                {/* Kolom KPI dengan Conditional Styling */}
                 <div className="col-md-3">
-                    <div className="card border-0 shadow-sm mb-3 text-center p-3">
-                        <p className="text-muted mb-1 small text-uppercase">Total Output ({mesin})</p>
-                        <h2 className="fw-bold text-dark">{loading ? "..." : totalProduksi.toLocaleString()}</h2>
-                        <span className="badge bg-success w-50 mx-auto">Good Run</span>
+                    <div className={`card ${statusWarna} shadow-sm mb-3`}>
+                        <div className="card-body text-center">
+                            <h6>Total Output</h6>
+                            <h2 className="fw-bold">{totalProduksi}</h2>
+                            <small>{totalProduksi < targetHarian ? "⚠️ Di bawah Target" : "✅ Target Tercapai"}</small>
+                        </div>
                     </div>
 
-                    <div className="card border-0 shadow-sm mb-3 text-center p-3">
-                        <p className="text-muted mb-1 small text-uppercase">Efisiensi Real-Time</p>
-                        <h2 className="fw-bold text-success">{loading ? "..." : "94.2%"}</h2>
+                    <div className="card border-0 shadow-sm mb-3">
+                        <div className="card-body">
+                            <h6 className="text-center">Komposisi Kualitas</h6>
+                            <GrafikKualitas dataProduksi={dataProduksi} />
+                        </div>
                     </div>
                 </div>
 
-                {/* GRAFIK UTAMA */}
+                {/* Kolom Grafik Utama */}
                 <div className="col-md-9">
-                    <div className="card border-0 shadow-sm p-4">
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                            <h5 className="fw-bold mb-0">Tren Produksi Per Jam</h5>
-                            {loading && <div className="spinner-border spinner-border-sm text-primary"></div>}
-                        </div>
+                    <div className="card border-0 shadow-sm p-3">
                         <GrafikProduksi dataInput={dataProduksi} judul={mesin} />
                     </div>
                 </div>
