@@ -1,93 +1,140 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, SafeAreaView, Platform } from "react-native";
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  StatusBar,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
+
 export default function App() {
+  // Fungsi Alert saat Kartu Gudang A ditekan
+  const detailGudangA = () => {
+    Alert.alert(
+      "Detail Gudang A",
+      "Kondisi: Aman\nKapasitas saat ini: 85%\nSisa slot penyimpanan masih tersedia untuk beban logistik baru.",
+      [{ text: "Tutup", style: "cancel" }],
+    );
+  };
+
+  // Fungsi Alert saat Kartu Gudang B ditekan
+  const detailGudangB = () => {
+    Alert.alert(
+      "Peringatan Gudang B",
+      "Kondisi: KRITIS!\nKapasitas saat ini: 95%\nSegera lakukan pengosongan atau pemindahan material!",
+      [{ text: "Mengerti", style: "destructive" }],
+    );
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="auto" />
-      {/* Bagian Header */}
+    <ScrollView style={styles.container}>
+      <StatusBar barStyle="dark-content" />
+
+      {/* Header Utama Aplikasi */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>PT. Manufaktur Maju</Text>
-        <Text style={styles.headerSubtitle}>Aplikasi Monitoring Gudang</Text>
+        <Text style={styles.title}>PT. Manufaktur Maju</Text>
+        <Text style={styles.subtitle}>Aplikasi Monitoring Gudang</Text>
       </View>
-      {/* Bagian Konten Utama */}
-      <View style={styles.content}>
-        <Text style={styles.welcomeText}>Selamat Datang, Operator!</Text>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Status Gudang A</Text>
-          <Text style={styles.cardValue}>Kapasitas: 85%</Text>
-          <Text style={styles.cardStatus}>TERSEDIA</Text>
+
+      <Text style={styles.welcomeText}>Selamat Datang, Operator!</Text>
+
+      {/* KARTU GUDANG A (Bisa Ditekan) */}
+      <TouchableOpacity
+        style={styles.card}
+        onPress={detailGudangA}
+        activeOpacity={0.7}
+      >
+        <View style={styles.cardContent}>
+          <View>
+            <Text style={styles.gudangTitle}>Status Gudang A</Text>
+            <Text style={styles.gudangKapasitas}>Kapasitas: 85%</Text>
+          </View>
+          <Text style={[styles.statusBadge, { color: "#2ecc71" }]}>
+            TERSEDIA
+          </Text>
         </View>
-        <View style={[styles.card, styles.cardWarning]}>
-          <Text style={styles.cardTitle}>Status Gudang B</Text>
-          <Text style={styles.cardValue}>Kapasitas: 95%</Text>
-          <Text style={styles.cardStatus}>PENUH</Text>
+      </TouchableOpacity>
+
+      {/* KARTU GUDANG B (Bisa Ditekan) */}
+      <TouchableOpacity
+        style={[styles.card, styles.cardAlert]}
+        onPress={detailGudangB}
+        activeOpacity={0.7}
+      >
+        <View style={styles.cardContent}>
+          <View>
+            <Text style={styles.gudangTitle}>Status Gudang B</Text>
+            <Text style={styles.gudangKapasitas}>Kapasitas: 95%</Text>
+          </View>
+          <Text style={[styles.statusBadge, { color: "#e74c3c" }]}>PENUH</Text>
         </View>
-      </View>
-    </SafeAreaView>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
-// Styling menggunakan StyleSheet (seperti CSS tapi object JS)
+
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // Artinya layar penuh
-    backgroundColor: "#f0f2f5",
-    paddingTop: Platform.OS === "android" ? 25 : 0, // Padding khusus Android status bar
+    flex: 1,
+    backgroundColor: "#f5f6fa",
+    paddingTop: 50,
+    paddingHorizontal: 20,
   },
   header: {
     backgroundColor: "#2c3e50",
     padding: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    marginBottom: 20,
-    elevation: 5, // Shadow di Android
+    borderRadius: 15,
+    marginBottom: 25,
   },
-  headerTitle: {
-    color: "white",
-    fontSize: 24,
+  title: {
+    fontSize: 22,
     fontWeight: "bold",
+    color: "#fff",
   },
-  headerSubtitle: {
-    color: "#bdc3c7",
+  subtitle: {
     fontSize: 14,
-  },
-  content: {
-    padding: 20,
+    color: "#bdc3c7",
+    marginTop: 5,
   },
   welcomeText: {
-    fontSize: 18,
-    marginBottom: 15,
+    fontSize: 16,
     color: "#333",
+    marginBottom: 15,
   },
   card: {
-    backgroundColor: "white",
+    backgroundColor: "#fff",
+    borderRadius: 12,
     padding: 20,
-    borderRadius: 10,
     marginBottom: 15,
-    // Shadow khusus iOS dan Android
+    elevation: 3,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
-  cardWarning: {
+  cardAlert: {
     borderLeftWidth: 5,
     borderLeftColor: "#e74c3c",
   },
-  cardTitle: {
+  cardContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  gudangTitle: {
     fontSize: 16,
     fontWeight: "bold",
-    marginBottom: 5,
+    color: "#2c3e50",
   },
-  cardValue: {
+  gudangKapasitas: {
     fontSize: 14,
     color: "#7f8c8d",
+    marginTop: 4,
   },
-  cardStatus: {
+  statusBadge: {
     fontSize: 12,
     fontWeight: "bold",
-    color: "#27ae60",
-    marginTop: 5,
-    textAlign: "right",
   },
 });
