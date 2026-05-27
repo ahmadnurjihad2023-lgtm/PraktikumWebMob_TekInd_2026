@@ -4,12 +4,15 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 // Import Screens
 import HomeScreen from "./screens/HomeScreen";
 import DetailScreen from "./screens/DetailScreen";
+
 // Membukan Stack Navigator
 const Stack = createNativeStackNavigator();
+
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      {/* ubah initialroutername menjadi detail */}
+      <Stack.Navigator initialRouteName="Detail">
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -21,6 +24,7 @@ export default function App() {
           options={({ route }) => ({
             title: route.params?.itemData.nama || "Detail",
           })}
+          initialParams={{ itemData: { nama: "Mur Ring 12", stok: 2, lokasi: "Rak A-2" } }}
         />
       </Stack.Navigator>
     </NavigationContainer>
