@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
+
 // Data Mock Inventori
 const DATA_INVENTORI = [
   { id: "1", nama: "Baut M10", stok: 500, lokasi: "Rak A-1" },
@@ -13,6 +14,7 @@ const DATA_INVENTORI = [
   { id: "3", nama: "Packing Kayu", stok: 100, lokasi: "Gudang Luar" },
   { id: "4", nama: "Mur Ring 12", stok: 0, lokasi: "Rak A-2" }, // Stok Habis
 ];
+
 function HomeScreen({ navigation }) {
   // Fungsi Render Item untuk FlatList
   const renderItem = ({ item }) => (
@@ -27,6 +29,7 @@ function HomeScreen({ navigation }) {
       </View>
     </TouchableOpacity>
   );
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Daftar Inventori Gudang</Text>
@@ -34,10 +37,24 @@ function HomeScreen({ navigation }) {
         data={DATA_INVENTORI}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        // TAMBAHAN: Memberikan jarak di bawah agar item terakhir tidak tertutup FAB
+        contentContainerStyle={{ paddingBottom: 90 }} 
       />
+
+      {/* =================================================================== */}
+      {/* 1. KODE TAMBAHAN LATIHAN 2: TOMBOL MENGAMBANG (FAB)                 */}
+      {/* =================================================================== */}
+      <TouchableOpacity
+        style={styles.fabButton}
+        onPress={() => navigation.navigate("Tambah")}
+      >
+        <Text style={styles.fabText}>+</Text>
+      </TouchableOpacity>
+      {/* =================================================================== */}
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -72,5 +89,32 @@ const styles = StyleSheet.create({
   itemSub: {
     color: "#666",
   },
+  
+  // ===================================================================
+  // 2. KODE TAMBAHAN STYLING UNTUK FAB (TOMBOL BULAT)
+  // ===================================================================
+  fabButton: {
+    position: "absolute",       // Membuat tombol melayang di atas konten lain
+    bottom: 25,                 // Jarak dari bawah layar
+    right: 25,                  // Jarak dari kanan layar
+    backgroundColor: "#2980b9",   // Warna biru industri
+    width: 60,                  // Ukuran lingkaran lebar
+    height: 60,                 // Ukuran lingkaran tinggi
+    borderRadius: 30,           // Setengah ukuran lebar/tinggi agar bulat sempurna
+    justifyContent: "center",    // Posisi teks "+" center vertikal
+    alignItems: "center",        // Posisi teks "+" center horizontal
+    elevation: 5,               // Bayangan di Android
+    shadowColor: "#000",        // Bayangan di iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  fabText: {
+    color: "#fff",              // Warna tanda + putih
+    fontSize: 30,               // Ukuran tanda + besar
+    fontWeight: "bold",
+    lineHeight: 32,             // Menjaga teks tepat di tengah lingkaran
+  },
 });
+
 export default HomeScreen;
