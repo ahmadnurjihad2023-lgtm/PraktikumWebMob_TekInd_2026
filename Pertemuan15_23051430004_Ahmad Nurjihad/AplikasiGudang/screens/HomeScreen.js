@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,50 +7,58 @@ import {
   StyleSheet,
 } from "react-native";
 
-// Data Mock Inventori
-const DATA_INVENTORI = [
-  { id: "1", nama: "Baut M10", stok: 500, lokasi: "Rak A-1" },
-  { id: "2", nama: "Oli Mesin 20L", stok: 12, lokasi: "Rak B-3" },
-  { id: "3", nama: "Packing Kayu", stok: 100, lokasi: "Gudang Luar" },
-  { id: "4", nama: "Mur Ring 12", stok: 0, lokasi: "Rak A-2" }, // Stok Habis
-];
+function HomeScreen({ navigation, route }) {
+  // Data State Awal Item Inspeksi Gudang/Produksi
+  const [items, setItems] = useState([
+    { id: "1", nama: "Panel Listrik Utama", status: "Belum Diperiksa" },
+    { id: "2", nama: "Kabel Power Motor 3 Phase", status: "Belum Diperiksa" },
+    {
+      id: "3",
+      nama: "Pipa Hidrolik Tekanan Tinggi",
+      status: "Belum Diperiksa",
+    },
+  ]);
 
-function HomeScreen({ navigation }) {
-  // Fungsi Render Item untuk FlatList
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={styles.itemContainer}
-      onPress={() => navigation.navigate("Detail", { itemData: item })}
-    >
-      <Text style={styles.itemTitle}>{item.nama}</Text>
-      <View style={styles.itemInfo}>
-        <Text style={styles.itemSub}>Stok: {item.stok}</Text>
-        <Text style={styles.itemSub}>{item.lokasi}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  // Efek State Management untuk memantau parameter balikan dari halaman detail
+  useEffect(() => {
+    if (route.params?.updatedId && route.params?.updatedStatus) {
+      setItems((prevItems) =>
+        prevItems.map((item) =>
+          item.id === route.params.updatedId
+            ? { ...item, status: route.params.updatedStatus }
+            : item,
+        ),
+      );
+    }
+  }, [route.params?.updatedId, route.params?.updatedStatus]);
+
+  const renderItem = ({ item }) => {
+    // Penentuan warna teks dinamis berdasarkan status QC komponen
+    let textColor = "#2c3e50"; // Default (Belum Diperiksa)
+    if (item.status === "Lolos") textColor = "#27ae60"; // Hijau jika Lolos
+    if (item.status === "Gagal") textColor = "#c0392b"; // MERAH JIKA GAGAL (Sesuai Soal Poin C)
+
+    return (
+      <TouchableOpacity
+        style={styles.card}
+        onPress={() => navigation.navigate("Detail", { itemData: item })}
+      >
+        <Text style={[styles.itemNama, { color: textColor }]}>{item.nama}</Text>
+        <Text style={[styles.itemStatus, { color: textColor }]}>
+          Status: {item.status}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Daftar Inventori Gudang</Text>
+      <Text style={styles.title}>Item Perlu Inspeksi</Text>
       <FlatList
-        data={DATA_INVENTORI}
+        data={items}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        // TAMBAHAN: Memberikan jarak di bawah agar item terakhir tidak tertutup FAB
-        contentContainerStyle={{ paddingBottom: 90 }} 
       />
-
-      {/* =================================================================== */}
-      {/* 1. KODE TAMBAHAN LATIHAN 2: TOMBOL MENGAMBANG (FAB)                 */}
-      {/* =================================================================== */}
-      <TouchableOpacity
-        style={styles.fabButton}
-        onPress={() => navigation.navigate("Tambah")}
-      >
-        <Text style={styles.fabText}>+</Text>
-      </TouchableOpacity>
-      {/* =================================================================== */}
     </View>
   );
 }
@@ -58,62 +66,34 @@ function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: 20,
+    backgroundColor: "#f5f6fa",
+    padding: 20,
   },
-  header: {
-    fontSize: 22,
+  title: {
+    fontSize: 20,
     fontWeight: "bold",
     marginBottom: 15,
-    paddingHorizontal: 15,
-  },
-  itemContainer: {
-    backgroundColor: "#f9f9f9",
-    padding: 15,
-    marginVertical: 8,
-    marginHorizontal: 15,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-  itemTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
     color: "#333",
   },
-  itemInfo: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 5,
+  card: {
+    backgroundColor: "#fff",
+    padding: 20,
+    borderRadius: 10,
+    marginBottom: 12,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
   },
-  itemSub: {
-    color: "#666",
-  },
-  
-  // ===================================================================
-  // 2. KODE TAMBAHAN STYLING UNTUK FAB (TOMBOL BULAT)
-  // ===================================================================
-  fabButton: {
-    position: "absolute",       // Membuat tombol melayang di atas konten lain
-    bottom: 25,                 // Jarak dari bawah layar
-    right: 25,                  // Jarak dari kanan layar
-    backgroundColor: "#2980b9",   // Warna biru industri
-    width: 60,                  // Ukuran lingkaran lebar
-    height: 60,                 // Ukuran lingkaran tinggi
-    borderRadius: 30,           // Setengah ukuran lebar/tinggi agar bulat sempurna
-    justifyContent: "center",    // Posisi teks "+" center vertikal
-    alignItems: "center",        // Posisi teks "+" center horizontal
-    elevation: 5,               // Bayangan di Android
-    shadowColor: "#000",        // Bayangan di iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  fabText: {
-    color: "#fff",              // Warna tanda + putih
-    fontSize: 30,               // Ukuran tanda + besar
+  itemNama: {
+    fontSize: 16,
     fontWeight: "bold",
-    lineHeight: 32,             // Menjaga teks tepat di tengah lingkaran
+  },
+  itemStatus: {
+    fontSize: 14,
+    marginTop: 5,
+    fontWeight: "600",
   },
 });
 

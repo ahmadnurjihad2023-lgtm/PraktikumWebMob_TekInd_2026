@@ -1,69 +1,76 @@
-import React, { useState } from "react"; // 1. SUDAH DIPERBAIKI: useState dipanggil
-import { View, Text, StyleSheet, Button, TouchableOpacity, Alert } from "react-native"; // 1. SUDAH DIPERBAIKI: Alert dipanggil
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
 
 function DetailScreen({ route, navigation }) {
-  // Menerima data yang dikirim dari HomeScreen
   const { itemData } = route.params;
+  const [status, setStatus] = useState(itemData.status);
 
-  // buat pelacak stok
-  const [stok, setStok] = useState(itemData.stok);
-
-  // fungsi mengurangi stok (dibatasi jangan sampai minus dari 0)
-  const kurangStok = () => {
-    if (stok > 0) setStok(stok - 1);
-  };
-
-  // fungsi menambah stok
-  const tambahStok = () => {
-    setStok(stok + 1);
+  const simpanHasilQC = () => {
+    // Mengirim kembali parameter ID dan Status baru ke rute asal (HomeScreen)
+    navigation.navigate({
+      name: "Home",
+      params: { updatedId: itemData.id, updatedStatus: status },
+      merge: true,
+    });
+    Alert.alert("Sistem QC", `Item berhasil ditandai sebagai: ${status}`);
   };
 
   return (
     <View style={styles.container}>
+      {/* Bagian A: Foto Item & Standar Kualitas */}
       <View style={styles.card}>
-        <Text style={styles.label}>Nama Barang:</Text>
+        <Image
+          source={{ uri: "http://unycommunity.com/wp-content/uploads/2022/06/istockphoto-1207928554-612x612-1.jpg" }}
+          style={styles.image}
+        />
+        <Text style={styles.label}>Nama Komponen:</Text>
         <Text style={styles.value}>{itemData.nama}</Text>
-        
-        <Text style={styles.label}>Stok Saat Ini:</Text>
-        {/* 5. SUDAH DIPERBAIKI: Mengubah itemData.stok menjadi stok agar teks angka ikut berubah */}
-        <Text
-          style={[
-            styles.value,
-            stok < 20 ? styles.dangerText : styles.successText,
-          ]}
-        >
-          {stok} Unit
+
+        <Text style={styles.label}>Kriteria Standar Mutu:</Text>
+        <Text style={styles.standarText}>
+          • Struktur fisik solid tanpa keretakan/deformasi{"\n"}• Nilai hambatan
+          isolasi internal {`>`} 50 MΩ{"\n"}• Lulus uji fungsional beban statis
+          selama 10 menit
         </Text>
-        
-        <Text style={styles.label}>Lokasi Penyimpanan:</Text>
-        <Text style={styles.value}>{itemData.lokasi}</Text>
-
-        {/* 4. SUDAH DIPERBAIKI: Format komentar JSX yang benar */}
-        {/* tampilan tombol minus dan plus */}
-        
-        {/* 2. SUDAH DIPERBAIKI: Mengubah view & text menjadi Kapital (View & Text) */}
-        <View style={styles.rowTombol}>
-          <TouchableOpacity style={styles.btnKurang} onPress={kurangStok}>
-            <Text style={styles.btnText}>- 1</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnTambah} onPress={tambahStok}>
-            <Text style={styles.btnText}>+ 1</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Logika tampilan tombol darurat */}
-        {stok === 0 && (
-          <TouchableOpacity 
-            style={styles.btnDarurat}
-            onPress={() => Alert.alert("Sistem Gudang", `Request stok darurat untuk ${itemData.nama} berhasil dikirim!`)}
-          >
-            <Text style={styles.btnDaruratText}>🚨 Request Stok Darurat</Text>
-          </TouchableOpacity>
-        )}
-
       </View>
-      
-      <Button title="Kembali ke Daftar" onPress={() => navigation.goBack()} />
+
+      {/* Bagian B: Simulasi Seleksi Pilihan Status Inspeksi */}
+      <Text style={styles.labelPilih}>Pilih Status Hasil Inspeksi:</Text>
+      <View style={styles.pickerContainer}>
+        <TouchableOpacity
+          style={[styles.btnStatus, status === "Lolos" && styles.btnLolosAktif]}
+          onPress={() => setStatus("Lolos")}
+        >
+          <Text
+            style={[styles.btnText, status === "Lolos" && styles.textPutih]}
+          >
+            LOLOS
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.btnStatus, status === "Gagal" && styles.btnGagalAktif]}
+          onPress={() => setStatus("Gagal")}
+        >
+          <Text
+            style={[styles.btnText, status === "Gagal" && styles.textPutih]}
+          >
+            GAGAL
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* Tombol Eksekusi Aksi */}
+      <TouchableOpacity style={styles.btnSimpan} onPress={simpanHasilQC}>
+        <Text style={styles.btnSimpanText}>Simpan & Perbarui Status</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -71,71 +78,82 @@ function DetailScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    backgroundColor: "#f5f6fa",
     padding: 20,
-    backgroundColor: "#f0f0f0",
   },
   card: {
-    backgroundColor: "white",
-    padding: 20,
+    backgroundColor: "#fff",
+    padding: 15,
     borderRadius: 10,
+    elevation: 2,
     marginBottom: 20,
-    elevation: 3,
+  },
+  image: {
+    width: "100%",
+    height: 180,
+    borderRadius: 8,
+    marginBottom: 15,
   },
   label: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#7f8c8d",
+    fontWeight: "bold",
     marginTop: 10,
   },
   value: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "bold",
     color: "#2c3e50",
+    marginBottom: 5,
   },
-  dangerText: {
-    color: "red",
+  standarText: {
+    fontSize: 14,
+    color: "#34495e",
+    marginTop: 5,
+    lineHeight: 22,
   },
-  successText: {
-    color: "green",
+  labelPilih: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: "#2c3e50",
+    marginBottom: 10,
   },
-  // KODE TAMBAHAN UNTUK GAYA TOMBOL AGAR TIDAK EROR
-  rowTombol: {
+  pickerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginTop: 15,
+    marginBottom: 30,
   },
-  btnKurang: {
-    backgroundColor: "#7f8c8d",
+  btnStatus: {
     flex: 1,
-    padding: 10,
-    borderRadius: 5,
+    padding: 15,
+    backgroundColor: "#e0e0e0",
     alignItems: "center",
-    marginRight: 5,
+    marginHorizontal: 5,
+    borderRadius: 8,
   },
-  btnTambah: {
-    backgroundColor: "#2980b9",
-    flex: 1,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-    marginLeft: 5,
+  btnLolosAktif: {
+    backgroundColor: "#27ae60",
+  },
+  btnGagalAktif: {
+    backgroundColor: "#c0392b",
   },
   btnText: {
-    color: "white",
+    fontWeight: "bold",
+    color: "#555",
+  },
+  textPutih: {
+    color: "#fff",
+  },
+  btnSimpan: {
+    backgroundColor: "#2980b9",
+    padding: 15,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  btnSimpanText: {
+    color: "#fff",
     fontWeight: "bold",
     fontSize: 16,
-  },
-  btnDarurat: {
-    backgroundColor: "#c0392b",
-    padding: 12,
-    borderRadius: 5,
-    alignItems: "center",
-    marginTop: 15,
-  },
-  btnDaruratText: {
-    color: "white",
-    fontWeight: "bold",
-    fontSize: 14,
   },
 });
 
