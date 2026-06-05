@@ -13,11 +13,20 @@ import {
 import { DATA_GUDANG } from "../data/warehouseData";
 
 export default function HomeScreen({ navigation }) {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
+  const [isSorted, setIsSorted] = useState(false);
 
   const filteredData = DATA_GUDANG.filter((item) =>
     item.namaBarang.toLowerCase().includes(search.toLowerCase())
   );
+
+  if (isSorted) {
+    filteredData.sort((a, b) => 
+      a.namaBarang.localeCompare(
+        b.namaBarang
+      )
+    );
+  }
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -48,6 +57,21 @@ export default function HomeScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Warehouse Locator</Text>
       <Text style={styles.subtitle}>Temukan lokasi barang dengan cepat</Text>
+
+      <TouchableOpacity
+        style={styles.sortButton}
+        onPress={() =>
+          setIsSorted(!isSorted)
+        }
+      >
+
+        <Text style={styles.sortButtonText}>
+          {isSorted
+            ? 'Urutan Awal'
+          : 'Sort A-Z'}
+        </Text>
+      </TouchableOpacity>
+
 
       <TextInput
         style={styles.searchBar}
@@ -165,5 +189,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#111827",
     fontWeight: "600",
+  },
+  sortButton: {
+    backgroundColor: '#2563EB',
+    padding:12,
+    borderRadius:10,
+    marginBottom:15
+  },
+  sortButtongText :{
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: 'bold'
   },
 });
